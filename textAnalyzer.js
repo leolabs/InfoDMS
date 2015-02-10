@@ -185,7 +185,7 @@ function calculateEqualness(textFile, averageCountList) { //Test
         }
     });
     averageDivergence /= wordCountList.length;
-    return averageDivergence;
+    return averageDivergence; //Miau
 }
 
 var fs = require('fs');
