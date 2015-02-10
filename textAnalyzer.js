@@ -172,6 +172,22 @@ function findEqualKeywords(textFiles, textCategory) {
     return mappedKeywords;
 }
 
+function calculateEqualness(textFile, averageCountList) { //Test
+    var wordCountList = findEqualKeywords(textFile, "undefined");
+    var averageDivergence = 0.;
+    wordCountList.forEach(function(wordElement, index) {
+        var word = wordElement[index];
+        if(averageCountList.hasOwnProperty(word)) {
+            var perc = Math.abs(1 - wordElement[word] / averageCountList[word]);
+            averageDivergence +=perc;
+        } else {
+            //Do some calculations instead???
+        }
+    });
+    averageDivergence /= wordCountList.length;
+    return averageDivergence;
+}
+
 var fs = require('fs');
 
 fs.readdir("/Users/leobernard/Desktop/Rechnungen/", function(err, files) {
