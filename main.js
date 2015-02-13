@@ -44,6 +44,7 @@ function addDocument(type, path) {
     fs.readFile(path, function(err, buffer) {
         textAnalyzer.analyzeTextsToDatabase([getUTF8String(buffer)], type, function(err, data) {
             if(!err) {
+                data.keywords = data.keywords.slice(0, 25);
                 console.log(data);
                 console.log("Success!");
                 process.exit();
@@ -64,7 +65,7 @@ function addDocuments(type, path) {
 
         files.filter(function(file) {
             return file.substr(0, 1) != ".";
-        }).forEach(function(file, index){
+        }).forEach(function(file){
             var buffer = fs.readFileSync(path + file);
             texts.push(getUTF8String(buffer));
         });

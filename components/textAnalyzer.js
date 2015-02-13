@@ -4,14 +4,14 @@ module.exports = function(models) {
 
         var keywords = {};
 
-        var textParts = text.split(" ");
-        var analyzeParts = text.split(" ");
+        //var textParts = text.split(/\s+/);
+        var analyzeParts = text.split(/\s+/);
 
-        for(var length = 2; length <= 2; length++) {
+        /*for(var length = 2; length <= 2; length++) { // Takes too fucking long!
             for(var i = 0; i <= textParts.length - length; i++) {
                 analyzeParts.push(textParts.slice(i, i+length).join(" "));
             }
-        }
+        }*/
 
         analyzeParts.forEach(function(word) {
             word = word.toLowerCase().replace(/[^a-z ]/g, "").replace(/\s+/g, ' ').trim();
