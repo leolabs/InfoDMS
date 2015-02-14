@@ -120,6 +120,10 @@ switch(process.argv[2]) {
         guessType(process.argv[3]);
         break;
 
+    case "guessLanguage":
+        textAnalyzer.guessDocumentLanguage(process.argv[3]);
+        break;
+
     default:
         console.error("Please use a correct command.");
 }

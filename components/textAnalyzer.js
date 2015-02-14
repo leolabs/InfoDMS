@@ -1,7 +1,23 @@
 module.exports = function(models) {
-    function extractKeywords(text) {
-        var stopWords = require("./../stop-words/de.json");
 
+    /**
+     * Extracts all words from the given Text, ignoring all stop-words specified in <b>sw_index.js</b> file.
+     * Returns a mapped onject array containing word and its count.
+     * @param text
+     * @param language
+     * @returns {Array}
+     */
+    function extractKeywords(text, language) {
+        var allLanguages = require("./../stop-words/sw_index.js").allLanguages;
+        var stopWords = "";
+        if(allLanguages.hasOwnProperty(language)) {
+            stopWords = require(allLanguages[language]);
+        } else {
+            Object.keys(allLanguages).forEach(function(key) {
+               stopWords += require(allLanguages[key]);
+            });
+        }
+        console.log(stopWords);
         var keywords = {};
 
         //var textParts = text.split(/\s+/);
@@ -188,11 +204,49 @@ module.exports = function(models) {
         });
     }
 
+    function calculateDocumentLanguage(text) {
+        var languages = require("./../stop-words/sw_index.js").allLanguages;
+        var analyzeParts = text.split(/\s+/);
+        var countedWords = {};
+        var stopwords = [];
+        Object.keys(languages).forEach(function(key) {
+            stopwords[key] = require(languages[key]);   //Loading first to reduce memory usage and runtime
+        });
+
+        analyzeParts.forEach(function(word) {
+            word = word.toLowerCase().replace(/[^a-z ]/g, "").replace(/\s+/g, ' ').trim();
+            word = word.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue").replace("ß", "ss"); //For german language only: Maybe add other languages later, but in the specific stop-words file
+
+            Object.keys(languages).forEach(function(key) {
+                if(stopwords[key].indexOf(word) > -1) {
+                    if(countedWords.hasOwnProperty(key)) {
+                        countedWords[key] += 1;
+                    } else {
+                        countedWords[key] = 1;
+                    }
+                }
+            });
+        });
+
+        var mostUsedLanguageName = Object.keys(countedWords)[0];
+        var mostUsedLanguageCount = countedWords[mostUsedLanguageName];
+        Object.keys(countedWords).forEach(function(element) {
+           if(countedWords[element] > mostUsedLanguageCount) {
+               mostUsedLanguageCount = countedWords[element];
+               mostUsedLanguageName = element;
+           }
+        });
+        return mostUsedLanguageName;
+    }
+
+
+
     return {
         analyzeTextsToDatabase: analyzeTextsToDatabase,
         analyzeTexts: analyzeTexts,
         calculateSimilarities: calculateSimilarities,
         guessDocumentType: guessDocumentType,
-        getDocumentTypes: getDocumentTypes
+        getDocumentTypes: getDocumentTypes,
+        calculateDocumentLanguage: calculateDocumentLanguage
     }
 };
