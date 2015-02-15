@@ -123,7 +123,7 @@ module.exports = function(models) {
     }
 
     function calculateSimilarity(textFile, averageCountList) {
-        var wordList = extractKeywords(textFile);
+        var wordList = extractKeywords(textFile, "de");
         var averageCounts = {};
         var averageSum = 0;
 
