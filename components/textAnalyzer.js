@@ -4,11 +4,10 @@ module.exports = function(models) {
      * Returns a mapped object array containing word and its count.
      *
      * @param text
-     * @param language
      * @returns {Array}
      */
-    function extractKeywords(text, language) {
-        var stopWords = require("../stop-words/").getStopwords(language);
+    function extractKeywords(text) {
+        var stopWords = require("../stop-words/").getStopwords(calculateDocumentLanguage(text));
 
         console.log(stopWords);
         var keywords = {};
@@ -70,7 +69,7 @@ module.exports = function(models) {
         textFiles.forEach(function(file, index) {
             if(progressCallback) progressCallback(index+1, textFiles.length);
 
-            var textKeywords = extractKeywords(file, "de"); // Todo: Detect language
+            var textKeywords = extractKeywords(file);
 
             textKeywords.forEach(function(keyword){
                 if(keywords.hasOwnProperty(keyword.word)) {
@@ -123,7 +122,7 @@ module.exports = function(models) {
     }
 
     function calculateSimilarity(textFile, averageCountList) {
-        var wordList = extractKeywords(textFile, "de");
+        var wordList = extractKeywords(textFile);
         var averageCounts = {};
         var averageSum = 0;
 
@@ -198,43 +197,21 @@ module.exports = function(models) {
     }
 
     function calculateDocumentLanguage(text) {
-        var stopWords = require("../stop-words/");
-        var languages = stopWords.getAvailableLanguages();
+        var lngDetector = new (require('languagedetect'));
 
-        var analyzeParts = text.split(/\s+/);
-        var countedWords = {};
-        var stopwords = {};
+        var languageToCode = {
+            'english': 'en',
+            'german': 'de',
+            'french': 'fr'
+        };
 
-        languages.forEach(function(language) {
-            stopwords[language] = stopWords.getStopwords(language);   //Loading first to reduce memory usage and runtime
-        });
+        var language = lngDetector.detect(text, 1)[0][0];
 
-        analyzeParts.forEach(function(word) {
-            word = word.toLowerCase().replace(/[^a-z ]/g, "").replace(/\s+/g, ' ').trim();
-            word = word.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue").replace("ß", "ss"); //For german language only: Maybe add other languages later, but in the specific stop-words file
-
-            Object.keys(languages).forEach(function(key) {
-                if(stopwords[key].indexOf(word) > -1) {
-                    if(countedWords.hasOwnProperty(key)) {
-                        countedWords[key] += 1;
-                    } else {
-                        countedWords[key] = 1;
-                    }
-                }
-            });
-        });
-
-        var mostUsedLanguageName = Object.keys(countedWords)[0];
-        var mostUsedLanguageCount = countedWords[mostUsedLanguageName];
-
-        Object.keys(countedWords).forEach(function(element) {
-           if(countedWords[element] > mostUsedLanguageCount) {
-               mostUsedLanguageCount = countedWords[element];
-               mostUsedLanguageName = element;
-           }
-        });
-
-        return mostUsedLanguageName;
+        if(languageToCode.hasOwnProperty(language)) {
+            return languageToCode[language];
+        } else {
+            return null;
+        }
     }
 
     return {
