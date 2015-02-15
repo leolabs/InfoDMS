@@ -1,22 +1,15 @@
 module.exports = function(models) {
-
     /**
-     * Extracts all words from the given Text, ignoring all stop-words specified in <b>sw_index.js</b> file.
-     * Returns a mapped onject array containing word and its count.
+     * Extracts all words from the given Text, ignoring all stop-words specified in <b>stop-words</b> files.
+     * Returns a mapped object array containing word and its count.
+     *
      * @param text
      * @param language
      * @returns {Array}
      */
     function extractKeywords(text, language) {
-        var allLanguages = require("./../stop-words/sw_index.js").allLanguages;
-        var stopWords = "";
-        if(allLanguages.hasOwnProperty(language)) {
-            stopWords = require(allLanguages[language]);
-        } else {
-            Object.keys(allLanguages).forEach(function(key) {
-               stopWords += require(allLanguages[key]);
-            });
-        }
+        var stopWords = require("../stop-words/").getStopwords(language);
+
         console.log(stopWords);
         var keywords = {};
 
@@ -77,7 +70,7 @@ module.exports = function(models) {
         textFiles.forEach(function(file, index) {
             if(progressCallback) progressCallback(index+1, textFiles.length);
 
-            var textKeywords = extractKeywords(file);
+            var textKeywords = extractKeywords(file, "de"); // Todo: Detect language
 
             textKeywords.forEach(function(keyword){
                 if(keywords.hasOwnProperty(keyword.word)) {
@@ -205,12 +198,15 @@ module.exports = function(models) {
     }
 
     function calculateDocumentLanguage(text) {
-        var languages = require("./../stop-words/sw_index.js").allLanguages;
+        var stopWords = require("../stop-words/");
+        var languages = stopWords.getAvailableLanguages();
+
         var analyzeParts = text.split(/\s+/);
         var countedWords = {};
-        var stopwords = [];
-        Object.keys(languages).forEach(function(key) {
-            stopwords[key] = require(languages[key]);   //Loading first to reduce memory usage and runtime
+        var stopwords = {};
+
+        languages.forEach(function(language) {
+            stopwords[language] = stopWords.getStopwords(language);   //Loading first to reduce memory usage and runtime
         });
 
         analyzeParts.forEach(function(word) {
@@ -230,16 +226,16 @@ module.exports = function(models) {
 
         var mostUsedLanguageName = Object.keys(countedWords)[0];
         var mostUsedLanguageCount = countedWords[mostUsedLanguageName];
+
         Object.keys(countedWords).forEach(function(element) {
            if(countedWords[element] > mostUsedLanguageCount) {
                mostUsedLanguageCount = countedWords[element];
                mostUsedLanguageName = element;
            }
         });
+
         return mostUsedLanguageName;
     }
-
-
 
     return {
         analyzeTextsToDatabase: analyzeTextsToDatabase,
