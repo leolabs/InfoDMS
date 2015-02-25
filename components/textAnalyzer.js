@@ -226,6 +226,7 @@ module.exports = function(models) {
         var fs = require('fs');
 
         var hash = crypto.getHashes().indexOf(hashType) > -1 ? crypto.createHash(hashType) : crypto.createHash('md5');
+
         var stream = fs.createReadStream(filepath);
         stream.on('data', function (data) {
             hash.update(data);
