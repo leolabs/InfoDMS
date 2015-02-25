@@ -214,12 +214,34 @@ module.exports = function(models) {
         }
     }
 
+    /**
+     * Creates a hash for the given file with the defined hashType.
+     * Standardtype is md5
+     * @param filepath The filepath to the file to hash
+     * @param hashType The type of hashFunction(f.e. md5, sha1, dsa)
+     * @param callback The callback function (err, data)
+     */
+    function calculateDocumentHash(filepath, hashType, callback) {
+        var crypto = require('crypto');
+        var fs = require('fs');
+
+        var hash = crypto.getHashes().indexOf(hashType) > -1 ? crypto.createHash(hashType) : crypto.createHash('md5');
+        var stream = fs.createReadStream(filepath);
+        stream.on('data', function (data) {
+            hash.update(data);
+        });
+        stream.on('end', function () {
+            callback(false, hash.digest('hex'));
+        });
+    }
+
     return {
         analyzeTextsToDatabase: analyzeTextsToDatabase,
         analyzeTexts: analyzeTexts,
         calculateSimilarities: calculateSimilarities,
         guessDocumentType: guessDocumentType,
         getDocumentTypes: getDocumentTypes,
-        calculateDocumentLanguage: calculateDocumentLanguage
+        calculateDocumentLanguage: calculateDocumentLanguage,
+        calculateDocumentHash: calculateDocumentHash
     }
 };
