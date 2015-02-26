@@ -100,7 +100,6 @@ function guessType(path) {
         });
     });
 }
-
 console.log(process.argv[2] + ":");
 
 switch(process.argv[2]) {
@@ -123,6 +122,13 @@ switch(process.argv[2]) {
     case "guessLanguage":
         textAnalyzer.guessDocumentLanguage(process.argv[3]);
         break;
+
+    case "calculateHash":
+        textAnalyzer.calculateDocumentHash(process.argv[3], null, function(err, data) {
+            console.log(data);
+        });
+        break;
+
 
     default:
         console.error("Please use a correct command.");
