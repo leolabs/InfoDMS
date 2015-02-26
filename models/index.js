@@ -5,7 +5,7 @@
 module.exports = function(mongoose) {
     return {
         DocumentType: require("./documenttype")(mongoose),
-
+        Document: require("./document")(mongoose),
         mongoose: mongoose
     };
 };
