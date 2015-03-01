@@ -9,7 +9,6 @@ module.exports = function(models) {
     function extractKeywords(text) {
         var stopWords = require("../stop-words/").getStopwords(calculateDocumentLanguage(text));
 
-        console.log(stopWords);
         var keywords = {};
 
         //var textParts = text.split(/\s+/);
@@ -42,6 +41,14 @@ module.exports = function(models) {
         });
     }
 
+    /**
+     * Calculates the average of a field and adds it to the Object
+     *
+     * @param wordCount the array containing the counted words
+     * @param field the field that should be averaged
+     * @param textFilesCount the number of textFiles that were analyzed
+     * @returns {Array<Object>}
+     */
     function calculateAverage(wordCount, field, textFilesCount) {
         var words = wordCount.slice();
 
@@ -53,6 +60,13 @@ module.exports = function(models) {
         return words;
     }
 
+    /**
+     * Maps an array of objects to an object using a given field that exists in every entry.
+     *
+     * @param array the input array consisting of objects
+     * @param field the field which should be used for mapping
+     * @returns {{}}
+     */
     function mapArrayToObject(array, field) {
         var obj = {};
 
@@ -128,7 +142,7 @@ module.exports = function(models) {
 
         averageCountList.filter(function(word) {
             return word.absoluteCount > 1;
-        }).forEach(function(word) {
+        }).slice(0, 100).forEach(function(word) {
             averageCounts[word.word] = word;
             averageSum += word.averageAbsoluteCount
         });
@@ -150,6 +164,8 @@ module.exports = function(models) {
                 var similarities = [];
 
                 types.forEach(function(type) {
+                    console.log(type.name);
+
                     similarities.push({
                         _id: type._id,
                         type: type.name,
