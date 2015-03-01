@@ -100,6 +100,27 @@ function guessType(path) {
         });
     });
 }
+
+function uploadDocumentToDatabase(filePath, savePath, callback) {
+    var fs = require('fs');
+    var readStream = fs.createReadStream(filePath, {
+        'flags': 'r',
+        'encoding': 'utf8',
+        'bufferSize': 4 * 1024
+    });
+    var writeStream = fs.createWriteStream(savePath);
+    readStream.on('data', function(data) {
+        writeStream.write(data);
+    });
+
+    readStream.on('end', function() {
+        callback(false)
+    });
+
+    readStream.on('error', function() {
+       callback(true);
+    });
+}
 console.log(process.argv[2] + ":");
 
 switch(process.argv[2]) {
