@@ -4,6 +4,6 @@
 module.exports = function(mongoose) {
     return mongoose.model('Tag', {
         name: String,
-        parent: {ref: 'Tag'}
+        parent: {type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}
     });
 };

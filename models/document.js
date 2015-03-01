@@ -9,7 +9,7 @@ module.exports = function(mongoose) {
         lastEditedDate: Date,
         text: String,
 
-        tags: [{ref: 'Tag'}],
+        tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
         keywords: [{
             word: String,
             absoluteCount: Number
