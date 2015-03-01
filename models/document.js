@@ -7,10 +7,9 @@ module.exports = function(mongoose) {
         hashValue: String, //Oder Number?
         uploadedDate: Date,
         lastEditedDate: Date,
-        tags: [{
-            tag: String,
-            priority: Number
-        }],
+        text: String,
+
+        tags: [{ref: 'Tag'}],
         keywords: [{
             word: String,
             absoluteCount: Number
