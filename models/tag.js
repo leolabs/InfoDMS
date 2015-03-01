@@ -4,6 +4,7 @@
 module.exports = function(mongoose) {
     return mongoose.model('Tag', {
         name: String,
-        parent: {type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}
+        parent: {type: mongoose.Schema.Types.ObjectId, ref: 'Tag'},
+        priority: Number //0 = highest priority
     });
 };
