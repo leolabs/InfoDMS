@@ -114,11 +114,11 @@ function uploadDocumentToDatabase(filePath, savePath, callback) {
     });
 
     readStream.on('end', function() {
-        callback(false)
+        callback(false);
     });
 
-    readStream.on('error', function() {
-       callback(true);
+    readStream.on('error', function(err) {
+       callback(err);
     });
 }
 console.log(process.argv[2] + ":");
