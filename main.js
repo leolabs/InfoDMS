@@ -103,6 +103,7 @@ function guessType(path) {
 
 function uploadDocumentToDatabase(filePath, savePath, callback) {
     var fs = require('fs');
+    var pathModule = require('path');
     var readStream = fs.createReadStream(filePath, {
         'flags': 'r',
         'encoding': 'utf8',
@@ -114,13 +115,30 @@ function uploadDocumentToDatabase(filePath, savePath, callback) {
     });
 
     readStream.on('end', function() {
+        writeStream.end();
+    });
+
+    writeStream.on('finish', function() {
+        var hashValue;
+        textAnalyzer.calculateDocumentHash(savePath, null, function(err, data) {
+            hashValue = data;
+        });
+        var documentName = pathModule.basename(filePath);
+        var uploadedDate = Date.now();
+        var lastEditedDate = uploadedDate;
+
         callback(false);
     });
 
     readStream.on('error', function(err) {
        callback(err);
     });
+
+    writeStream.on('error', function(err) {
+        callback(err);
+    });
 }
+
 console.log(process.argv[2] + ":");
 
 switch(process.argv[2]) {
