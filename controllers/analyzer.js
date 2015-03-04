@@ -6,17 +6,37 @@ module.exports = function(app, models, basePath) {
     var textAnalyzer = require("../components/textAnalyzer")(models);
 
     app.get(basePath, function(req, res) {
-        textAnalyzer.getDocumentTypes(function(types) {
-            res.json(types);
+        textAnalyzer.getDocumentTypes(function(err, types) {
+            if(!err) {
+                res.json(types);
+            }else{
+                models.defaultDBError(res, err);
+            }
         })
     });
 
-    app.post(basePath + "/guessType/:id", function(req, res) {
+    app.get(basePath + "/guessType/:id", function(req, res) {
         models.Document.findById(req.param('id'), function(err, doc) {
             if(!err) {
                 textAnalyzer.guessDocumentType(doc.text, function(err2, types) {
                     if(!err2) {
                         res.json(types);
+                    }else{
+                        models.defaultDBError(err2, res);
+                    }
+                });
+            }else{
+                models.defaultDBError(err, res);
+            }
+        })
+    });
+
+    app.get(basePath + "/addToDatabase/:id", function(req, res) {
+        models.Document.findById(req.param('id'), function(err, doc) {
+            if(!err) {
+                textAnalyzer.analyzeTextsToDatabase([doc.text], function(err2, types) {
+                    if(!err2) {
+                        res.json({success: true});
                     }else{
                         models.defaultDBError(err2, res);
                     }

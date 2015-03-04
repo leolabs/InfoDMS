@@ -201,11 +201,14 @@ module.exports = function(models) {
     function getDocumentTypes(callback) {
         models.DocumentType.aggregate([{
             $group: {
-                _id: "$name"
+                _id: "$name",
+                analyzedDocuments: {"$sum": "$analyzedDocuments"}
             }
+        },{
+            $sort: {analyzedDocuments: -1}
         }], function(err, docs){
             if(!err) {
-                callback(false, docs.map(function(doc){return doc._id}));
+                callback(false, docs);
             } else {
                 callback(err, null);
             }

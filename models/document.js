@@ -4,7 +4,10 @@
 module.exports = function(mongoose) {
     return mongoose.model('Document', {
         name: String,
-        hashValue: String, //Oder Number?
+        size: Number,
+        hash: String, //Oder Number?
+        path: String,
+        extension: String,
         uploadedDate: Date,
         lastEditedDate: Date,
         text: String,

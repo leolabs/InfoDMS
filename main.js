@@ -110,24 +110,23 @@ function uploadDocumentToDatabase(filePath, savePath, callback) {
         'bufferSize': 4 * 1024
     });
     var writeStream = fs.createWriteStream(savePath);
-    readStream.on('data', function(data) {
-        writeStream.write(data);
-    });
+    readStream.pipe(writeStream);
 
     readStream.on('end', function() {
         writeStream.end();
     });
 
     writeStream.on('finish', function() {
-        var hashValue;
         textAnalyzer.calculateDocumentHash(savePath, null, function(err, data) {
-            hashValue = data;
-        });
-        var documentName = pathModule.basename(filePath);
-        var uploadedDate = Date.now();
-        var lastEditedDate = uploadedDate;
+            var hashValue = data;
 
-        callback(false);
+            var documentName = pathModule.basename(filePath);
+            var uploadedDate = Date.now();
+            var lastEditedDate = uploadedDate;
+
+            callback(false);
+        });
+
     });
 
     readStream.on('error', function(err) {
@@ -166,6 +165,10 @@ switch(process.argv[2]) {
         textAnalyzer.calculateDocumentHash(process.argv[3], null, function(err, data) {
             console.log(data);
         });
+        break;
+
+    case 'mau?':
+        uploadDocumentToDatabase("/Users/leobernard/Desktop/02182015164813.pdf", "/Users/leobernard/Desktop/Zeugnisse/bla.pdf", function(err){console.log(err)});
         break;
 
 
