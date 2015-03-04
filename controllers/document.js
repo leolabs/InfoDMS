@@ -13,6 +13,17 @@ module.exports = function(app, models, basePath) {
             res.json(docs);
         })
     });
+    
+    app.get(basePath + "/removeDoc/:id", function(req, res) {
+       models.Document.findByIdAndRemove(req.param('id'), function(err, doc) {
+          if(!err) {
+              res.send("The document <em>\' " + doc.name + "</em> was successfully deleted.");
+          } else {
+              console.log(err);
+              res.send("Error deleting file");
+          }
+       });
+    });
 
     app.use(multer({
         dest: './uploads/',
