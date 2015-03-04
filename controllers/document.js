@@ -17,12 +17,23 @@ module.exports = function(app, models, basePath) {
     app.get(basePath + "/removeDoc/:id", function(req, res) {
        models.Document.findByIdAndRemove(req.param('id'), function(err, doc) {
           if(!err) {
-              res.send("The document <em>\' " + doc.name + "</em> was successfully deleted.");
+              res.send("The document \'" + doc.name + "\' was successfully deleted.");
           } else {
               console.log(err);
               res.send("Error deleting file");
           }
        });
+    });
+    
+    app.get(basePath + "/searchDocument/:q", function(req, res) {
+       models.Document.find({keywords.word : req.query.q}, function(err, docs) {
+           if(!err) {
+               docs.sort(function(a,b) {return b.keywords.absoluteCount-a.keywords.absoluteCount});
+               res.json(docs);
+           } else {
+               res.send("error" + err);
+           }
+       }); 
     });
 
     app.use(multer({
