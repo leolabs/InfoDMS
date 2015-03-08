@@ -11,7 +11,10 @@ var app     = express();
 
 // Controller initialisieren
 require("./controllers/analyzer")(app, models, '/api/analyzer');
-require("./controllers/document")(app, models, '/api/documents');
+require("./controllers/documents")(app, models, '/api/documents');
+
+// Fileserving für das Webinterface initialisieren
+app.use(express.static('static'));
 
 app.listen(8091, function(){
     console.log('Express server listening on port ' + 8091);

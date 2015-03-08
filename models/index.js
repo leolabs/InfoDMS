@@ -9,7 +9,7 @@ module.exports = function(mongoose) {
         mongoose: mongoose,
 
         defaultDBError: function(err, res) {
-            res.json({"error": "Database Error", message: err});
+            res.status(500).json({"error": "Database Error", message: err});
         }
     };
 };
