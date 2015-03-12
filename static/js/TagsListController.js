@@ -3,5 +3,8 @@
  */
 
 angularApp.controller('TagsListController', function($scope, $http) {
-
+    $http.get("/api/tags/")
+        .success(function(tags) {
+            $scope.tags = tags;
+        });
 });

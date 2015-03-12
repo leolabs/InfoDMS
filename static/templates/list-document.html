@@ -1,0 +1,16 @@
+<div class="list-group">
+    <a ng-href="#/documents/{{document._id}}" class="list-group-item" ng-repeat="document in documents">
+        <h4 class="list-group-item-heading">{{document.name}}</h4>
+        <p class="list-group-item-text">
+            <span class="text-muted">
+                {{document.extension | uppercase}} &middot;
+                {{document.size / 1024 | number:0}} KB &middot;
+                {{document.type || ""}}
+            </span>
+
+            <span ng-repeat="tag in document.tags">
+                 &middot; <span class="label label-default">{{tag.name}}</span>
+            </span>
+        </p>
+    </a>
+</div>

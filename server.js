@@ -6,12 +6,19 @@ mongoose.connect('mongodb://localhost/infodms');
 var models = require("./models")(mongoose);
 
 // ExpressJS initialisieren
-var express = require('express');
-var app     = express();
+var express    = require('express');
+var bodyParser = require('body-parser');
+var app        = express();
+
+// JSON-Parser
+app.use(bodyParser.json()); // parse application/json
+app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
+
 
 // Controller initialisieren
 require("./controllers/analyzer")(app, models, '/api/analyzer');
 require("./controllers/documents")(app, models, '/api/documents');
+require("./controllers/tags")(app, models, '/api/tags');
 
 // Fileserving für das Webinterface initialisieren
 app.use(express.static('static'));

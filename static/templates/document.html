@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            {{document.name}}
+
+            <div class="pull-right">
+                <a target="_blank" ng-click="openDocumentTypeSelector(document);" class="btn btn-default btn-xs">Change document type</a>
+                <a target="_blank" ng-href="{{iframeURL}}" class="btn btn-default btn-xs">Open externally</a>
+            </div>
+        </div>
+
+        <p class="panel-body" style="margin-bottom: 0">
+            <span class="text-muted">
+                {{document.extension | uppercase}} &middot;
+                {{document.size / 1024 | number:0}} KB
+                <span ng-if="document.type">&middot; {{document.type}}</span>
+                &middot; Uploaded: {{document.uploadedDate | date: 'dd.MM.yyyy, HH:mm'}}
+            </span>
+
+            <span ng-repeat="tag in document.tags">
+                 &middot; <span class="label label-default" ng-href="#/tags/{{tag._id}}">{{tag.name}}</span>
+            </span>
+        </p>
+
+        <hr style="margin: 0">
+
+        <p class="panel-body" style="margin-bottom: 0">
+            <iframe src="{{iframeURL}}" style="width: 100%; height: 500px; border: none"></iframe>
+        </p>
+
+        <hr style="margin: 0">
+
+        <div class="list-group">
+            <a class="list-group-item" ng-click="advanced = !advanced">Toggle advanced info <i class="glyphicon pull-right" ng-class="{'glyphicon-chevron-down': !advanced, 'glyphicon-chevron-up': advanced}"></i></a>
+        </div>
+
+        <div class="panel-body" ng-if="advanced" style="margin-bottom: 0">
+            <h4>Extracted Text</h4>
+            <button class="btn btn-primary" ng-click="">This text is shit</button>
+            <pre style="margin-bottom: 0">{{document.text}}</pre>
+        </div>
+
+        <hr style="margin: 0">
+
+        <div class="panel-body" ng-if="advanced" style="margin-bottom: 0">
+            <h4>Keywords</h4>
+
+            <div style="text-align: justify">
+                <span class="label" ng-class="{'label-default': keyword.count == 1, 'label-primary': keyword.count == 2, 'label-success': keyword.count > 2}" ng-repeat="keyword in document.keywords">{{keyword.word}}</span>
+            </div>
+        </div>
+    </div>
+</div>

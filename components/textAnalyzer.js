@@ -164,8 +164,6 @@ module.exports = function(models) {
                 var similarities = [];
 
                 types.forEach(function(type) {
-                    console.log(type.name);
-
                     similarities.push({
                         _id: type._id,
                         type: type.name,
@@ -187,11 +185,7 @@ module.exports = function(models) {
     function guessDocumentType(text, callback) {
         calculateSimilarities(text, function(err, similarities){
             if(!err) {
-                if(similarities.length > 0) {
-                    callback(false, similarities[0]);
-                } else {
-                    callback(false, null);
-                }
+                callback(false, similarities);
             }else{
                 callback(err, null);
             }
@@ -256,6 +250,7 @@ module.exports = function(models) {
     }
 
     return {
+        extractKeywords: extractKeywords,
         analyzeTextsToDatabase: analyzeTextsToDatabase,
         analyzeTexts: analyzeTexts,
         calculateSimilarities: calculateSimilarities,

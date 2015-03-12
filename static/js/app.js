@@ -1,4 +1,4 @@
-var angularApp = angular.module('InfoDMS', ['ngRoute', 'ui.bootstrap']);
+var angularApp = angular.module('InfoDMS', ['ngRoute', 'ui.bootstrap', 'angularFileUpload']);
 
 angularApp.config(function($routeProvider) {
     $routeProvider.
@@ -29,6 +29,10 @@ angularApp.config(function($routeProvider) {
         when('/types/:type', {
             templateUrl: '/templates/types-single.html',
             controller: 'TypesSingleController'
+        }).
+        when('/documents/:id', {
+            templateUrl: '/templates/document.html',
+            controller: 'DocumentController'
         }).
         otherwise({
             redirectTo: '/'

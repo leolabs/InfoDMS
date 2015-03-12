@@ -8,8 +8,8 @@ module.exports = function(mongoose) {
         size: Number,
         hash: String,
         path: String,
-        state: {type: String, enum: ['uploaded', 'added', 'extracting', 'analyzing', 'done'], default: 'uploaded'},
-        type: {type: mongoose.Schema.Types.ObjectId, ref: 'Tag'},
+        state: {type: String, enum: ['uploaded', 'extracting', 'extracted', 'analyzing', 'done'], default: 'uploaded'},
+        type: String,
         extension: String,
         uploadedDate: Date,
         lastEditedDate: Date,
@@ -18,7 +18,7 @@ module.exports = function(mongoose) {
         tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
         keywords: [{
             word: String,
-            absoluteCount: Number
+            count: Number
         }]
     });
 };

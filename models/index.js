@@ -6,6 +6,7 @@ module.exports = function(mongoose) {
     return {
         DocumentType: require("./documenttype")(mongoose),
         Document: require("./document")(mongoose),
+        Tag: require('./tag')(mongoose),
         mongoose: mongoose,
 
         defaultDBError: function(err, res) {
