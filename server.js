@@ -23,6 +23,7 @@ require("./controllers/tags")(app, models, '/api/tags');
 // Fileserving für das Webinterface initialisieren
 app.use(express.static('static'));
 
+// Auf Port 8091 hören
 app.listen(8091, function(){
     console.log('Express server listening on port ' + 8091);
 });

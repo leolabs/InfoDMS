@@ -5,7 +5,11 @@
 var languages = ['de', 'en', 'fr'];
 
 module.exports = {
-    getStopwords: function(language) {
+    /**
+     * Returns all stop-words
+     * @returns {Array} a list of all stop-words
+     */
+    getStopwords: function() {
         var stopWords = [];
 
         languages.forEach(function(lang) {
@@ -14,6 +18,11 @@ module.exports = {
 
         return stopWords;
     },
+
+    /**
+     * Returns a list of all available languages
+     * @returns {string[]}
+     */
     getAvailableLanguages: function() {
         return languages;
     }

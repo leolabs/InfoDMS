@@ -38,6 +38,7 @@ angularApp.controller("TypeSelectorController", function($scope, $http, $modalIn
     $scope.types = [{type: "Loading..."}];
     $scope.selectedName = document.type;
     $scope.okText = "OK";
+    $scope.models = {newName: ""};
 
     $scope.select = function(type) {
         $scope.selectedName = type.type;
@@ -47,7 +48,7 @@ angularApp.controller("TypeSelectorController", function($scope, $http, $modalIn
         if($scope.okText == "OK") {
             $scope.okText = "Improving Database...";
 
-            $http.get("/api/analyzer/addToDatabase/" + document._id + "/" + $scope.selectedName)
+            $http.get("/api/analyzer/addToDatabase/" + document._id + "/" + ($scope.models.newName.trim() != "" ? $scope.models.newName.trim() : $scope.selectedName))
                 .success(function(res){
                     $scope.okText = "Saving changes...";
 
