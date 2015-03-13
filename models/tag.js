@@ -3,7 +3,7 @@
  */
 module.exports = function(mongoose) {
     return mongoose.model('Tag', {
-        name: String,
-        parent: {type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}
+        name: String, // The tag name
+        parent: {type: mongoose.Schema.Types.ObjectId, ref: 'Tag'} // The tag's parent (not in use)
     });
 };

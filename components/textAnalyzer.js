@@ -289,16 +289,20 @@ module.exports = function(models) {
      * @param callback The callback function (err, data)
      */
     function calculateDocumentHash(filepath, hashType, callback) {
+        // Initialize Crypto- and file-system-libraries
         var crypto = require('crypto');
         var fs = require('fs');
 
+        // Initialize hashing
         var hash = crypto.getHashes().indexOf(hashType) > -1 ? crypto.createHash(hashType) : crypto.createHash('md5');
 
+        // Read file and hash the data
         var stream = fs.createReadStream(filepath);
         stream.on('data', function (data) {
             hash.update(data);
         });
         stream.on('end', function () {
+            // Return the hash
             callback(false, hash.digest('hex'));
         });
     }

@@ -3,24 +3,21 @@
  */
 
 module.exports = function(app, models, basePath) {
-    var textAnalyzer = require("../components/textAnalyzer")(models);
-    var multer = require('multer');
-    var path = require('path');
-    var fs = require('fs');
-    var uploadDone = false;
-
+    // Getting the basePath returns a list of all tags
     app.get(basePath, function(req, res) {
         models.Tag.find(req.query, '', function(err, docs) {
             res.json(docs);
         })
     });
 
+    // Returns the tag count
     app.get(basePath + "/stats", function(req, res){
         models.Tag.count(function(err, count) {
             res.json({count: count});
         })
     });
 
+    // Outputs a single tag
     app.get(basePath + "/:id", function(req, res) {
         models.Tag.findById(req.params.id, '', function(err, doc) {
             if(!err) {
@@ -35,6 +32,7 @@ module.exports = function(app, models, basePath) {
         });
     });
 
+    // Modifies a tag by its ID
     app.put(basePath + "/:id", function(req, res) {
         models.Tag.findByIdAndUpdate(req.params.id, req.body, function(err, newDoc) {
             if(!err) {
@@ -44,7 +42,8 @@ module.exports = function(app, models, basePath) {
             }
         });
     });
-    
+
+    // Deletes a tag by its ID
     app.delete(basePath + "/:id", function(req, res) {
        models.Tag.findByIdAndRemove(req.params.id, function(err, doc) {
           if(!err) {
@@ -55,6 +54,7 @@ module.exports = function(app, models, basePath) {
        });
     });
 
+    // Adds a new tag to the database
     app.post(basePath, function(req, res) {
         var tag = new models.Tag(req.body);
 
